@@ -1,2 +1,4 @@
 # Algoritmo_em_Grafos
 Utilizando algoritmos em grafos em C/C++
+
+Para o nosso trabalho de Lista de Adjacência em linguagem C, estamos desenvolvendo um programa que representa uma rede complexa utilizando uma estrutura de dados baseada em grafos, especificamente a lista de adjacência. Nessa estrutura, cada nó do grafo é representado como uma lista encadeada, na qual cada elemento da lista mantém uma lista de seus vértices adjacentes, ou seja, os vértices que estão diretamente conectados a ele. O objetivo desse trabalho é utilizar algoritmos de caminho minimo para resolver problema de centralidade em redes complexas.
