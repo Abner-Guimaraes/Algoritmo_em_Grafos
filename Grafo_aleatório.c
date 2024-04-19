@@ -77,7 +77,7 @@ void imprime_ArquivoGrafo(Grafo G, FILE *saida) {
     for (p = G->ListaAdjacencia[i]; p != NULL; p = p->proximo) {
       fprintf(saida, " %d", p->valor);
     }
-    fprintf(saida, " -1\n");
+    fprintf(saida, "\n");
   }
 }
 
