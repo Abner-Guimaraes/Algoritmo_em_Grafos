@@ -6,13 +6,14 @@
 
 typedef struct noh {
   int valor;
+  int peso;
   struct noh *proximo;
 } No;
 
 typedef struct grafo {
   No **ListaAdjacencia;
-  int MaxNumeroVertices; 
-  int QuantidadeArestas; 
+  int MaxNumeroVertices;
+  int QuantidadeArestas;
 } * Grafo;
 
 // Entrega um vertice aleatorio para a criação de aresta entre dois vertices;
@@ -37,28 +38,32 @@ Grafo iniciar_Grafo(int n) {
 }
 
 // Percorre a lista com *PercorreLista, caso não tenha, insere no começo da lista;
-void insere_aresta(Grafo G, int v, int w) {
+void insere_aresta(Grafo G, int v, int w, int peso) {
   No *PercorreLista;
-  for (PercorreLista = G->ListaAdjacencia[v]; PercorreLista != NULL; PercorreLista = PercorreLista->proximo) {
+  for (PercorreLista = G->ListaAdjacencia[v]; PercorreLista != NULL;
+       PercorreLista = PercorreLista->proximo) {
     if (PercorreLista->valor == w) {
       return;
     }
   }
   PercorreLista = malloc(sizeof(No));
   PercorreLista->valor = w;
+  PercorreLista->peso = peso;
   PercorreLista->proximo = G->ListaAdjacencia[v];
   G->ListaAdjacencia[v] = PercorreLista;
   G->QuantidadeArestas++;
 }
 
-// Faz um grafo aleatorio, utilizando parametros definidos e utilizando funções acima;
-Grafo Criação_grafo_aleatorio(int n, int m) {
+// Faz um grafo aleatorio, utilizando parametros definidos e utilizando funções
+// acima;
+Grafo Criacao_grafo_aleatorio(int n, int m, int PesoMaximo) {
   Grafo G = iniciar_Grafo(n);
   while (G->QuantidadeArestas < m) {
     int v = vertice_aleatorio(G);
     int w = vertice_aleatorio(G);
     if (v != w) {
-      insere_aresta(G, v, w);
+      int peso = rand() % PesoMaximo + 1;
+      insere_aresta(G, v, w, peso);
     }
   }
   return G;
@@ -75,7 +80,7 @@ void imprime_ArquivoGrafo(Grafo G, FILE *saida) {
   for (i = 0; i < G->MaxNumeroVertices; i++) {
     fprintf(saida, "Vertice %d:", i);
     for (p = G->ListaAdjacencia[i]; p != NULL; p = p->proximo) {
-      fprintf(saida, " %d", p->valor);
+      fprintf(saida, "(%d peso é:%d)", p->valor, p->peso);
     }
     fprintf(saida, "\n");
   }
@@ -110,15 +115,17 @@ int main(void) {
     return 1;
   }
 
-  // for(int i = 0; i < 10; i++){}
   int NumeroMaxVertices = rand() % 51 + 25;
-    printf("%d\n", NumeroMaxVertices);
-  int QuantidadeMaxArestas = NumeroMaxVertices * (NumeroMaxVertices - 1) / 2; // n.(n-1)/2 n = NumeroMaxVertices;
-    printf("%d\n", QuantidadeMaxArestas);
-  //int n = 13;
-  
+  printf("Numero total de Vertices: %d\n", NumeroMaxVertices);
+  int QuantidadeMaxArestas = NumeroMaxVertices * (NumeroMaxVertices - 1) / 2; //== n.(n-1)/2;
+  printf("Numero total de Arestas: %d\n", QuantidadeMaxArestas);
 
-  Grafo G = Criação_grafo_aleatorio(NumeroMaxVertices, QuantidadeMaxArestas);
+  int PesoMaximo = 50;
+  //printf("Digite o numero maximo de pesos que pode ser utilizado em uma aresta: ");
+  //scanf(" %d", &PesoMaximo);
+
+  Grafo G = Criacao_grafo_aleatorio(NumeroMaxVertices, QuantidadeMaxArestas, PesoMaximo);
+  
   imprime_ArquivoGrafo(G, saida);
 
   free_liberaGrafo(G);
