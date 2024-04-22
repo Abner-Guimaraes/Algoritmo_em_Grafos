@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-// Criar 10 grafos de 25 até 75 vertices, sendo grafo ponderado;
-// Lista de adjacencia;
+#include <limits.h>
 
 typedef struct noh {
   int valor;
@@ -54,8 +53,7 @@ void insere_aresta(Grafo G, int v, int w, int peso) {
   G->QuantidadeArestas++;
 }
 
-// Faz um grafo aleatorio, utilizando parametros definidos e utilizando funções
-// acima;
+// Faz um grafo aleatorio, utilizando parametros definidos e utilizando funções acima;
 Grafo Criacao_grafo_aleatorio(int n, int m, int PesoMaximo) {
   Grafo G = iniciar_Grafo(n);
   while (G->QuantidadeArestas < m) {
@@ -68,6 +66,22 @@ Grafo Criacao_grafo_aleatorio(int n, int m, int PesoMaximo) {
   }
   return G;
 }
+// Dijkstra: Inicializa os dois vetores auxiliares colocando infinito e NULL(-1);
+void INICIALIZA(Grafo G, int n,int s){
+  int *d = (int*) malloc(n*sizeof(int));
+  int *pi = (int*) malloc(n* sizeof(int));
+  for(int i = 0; i < n; i++){
+    d[i] = INT_MAX;
+    pi[i] = -1;
+  }
+  d[s] = 0;
+}
+// Dijkstra :;
+void RELAXA(int u, int n, int w){
+
+}
+
+
 
 // Faz a impressão de um grafo em um arquivo;
 void imprime_ArquivoGrafo(Grafo G, FILE *saida) {
