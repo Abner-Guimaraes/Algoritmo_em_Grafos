@@ -1,95 +1,112 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-// Criar 10 grafos de 25 até 75 vertices, sendo grafo ponderado;
-// Lista de adjacencia;
+#include <limits.h>
 
 typedef struct noh {
   int valor;
+  int peso;
   struct noh *proximo;
 } No;
 
 typedef struct grafo {
-  No **A;
-  int n; // Numero de vertices;
-  int m; // Numero de arestas;
+  No **ListaAdjacencia;
+  int MaxNumeroVertices;
+  int QuantidadeArestas;
 } * Grafo;
 
-// Entrega um vertice aleatorio para a criação de aresta entre eles dois
-// vertices;
+// Entrega um vertice aleatorio para a criação de aresta entre dois vertices;
 int vertice_aleatorio(Grafo G) {
   double r;
   r = (double)rand() / ((double)RAND_MAX + 1.0);
-  return (int)(r * G->n);
+  return (int)(r * G->MaxNumeroVertices);
 }
 
 // Cria um grafo com n vertices e 0 arestas;
-Grafo iniciarGrafo(int n) {
+Grafo iniciar_Grafo(int n) {
 
   Grafo G = malloc(sizeof *G);
-  G->n = n;
-  G->m = 0;
-  G->A = malloc(n * sizeof(No *));
+  G->MaxNumeroVertices = n;
+  G->QuantidadeArestas = 0;
+  G->ListaAdjacencia = malloc(n * sizeof(No *));
 
   for (int i = 0; i < n; i++) {
-    G->A[i] = NULL;
+    G->ListaAdjacencia[i] = NULL;
   }
   return G;
 }
 
-// Percorre a lista com *p, caso não tenha, insere no começo da lista;
-void insere_aresta(Grafo G, int v, int w) {
-  No *p;
-  for (p = G->A[v]; p != NULL; p = p->proximo) {
-    if (p->valor == w) {
+// Percorre a lista com *PercorreLista, caso não tenha, insere no começo da lista;
+void insere_aresta(Grafo G, int v, int w, int peso) {
+  No *PercorreLista;
+  for (PercorreLista = G->ListaAdjacencia[v]; PercorreLista != NULL;
+       PercorreLista = PercorreLista->proximo) {
+    if (PercorreLista->valor == w) {
       return;
     }
   }
-  p = malloc(sizeof(No));
-  p->valor = w;
-  p->proximo = G->A[v];
-  G->A[v] = p;
-  G->m++;
+  PercorreLista = malloc(sizeof(No));
+  PercorreLista->valor = w;
+  PercorreLista->peso = peso;
+  PercorreLista->proximo = G->ListaAdjacencia[v];
+  G->ListaAdjacencia[v] = PercorreLista;
+  G->QuantidadeArestas++;
 }
 
-// Faz um grafo aleatorio, utilizando parametros definidos e utilizando funções
-// acima;
-Grafo grafo_aleatorio(int n, int m) {
-  Grafo G = iniciarGrafo(n);
-  while (G->m < m) {
+// Faz um grafo aleatorio, utilizando parametros definidos e utilizando funções acima;
+Grafo Criacao_grafo_aleatorio(int n, int m, int PesoMaximo) {
+  Grafo G = iniciar_Grafo(n);
+  while (G->QuantidadeArestas < m) {
     int v = vertice_aleatorio(G);
     int w = vertice_aleatorio(G);
     if (v != w) {
-      insere_aresta(G, v, w);
+      int peso = rand() % PesoMaximo + 1;
+      insere_aresta(G, v, w, peso);
     }
   }
   return G;
 }
+// Dijkstra: Inicializa os dois vetores auxiliares colocando infinito e NULL(-1);
+void INICIALIZA(Grafo G, int n,int s){
+  int *d = (int*) malloc(n*sizeof(int));
+  int *pi = (int*) malloc(n* sizeof(int));
+  for(int i = 0; i < n; i++){
+    d[i] = INT_MAX;
+    pi[i] = -1;
+  }
+  d[s] = 0;
+}
+// Dijkstra :;
+void RELAXA(int u, int n, int w){
+
+}
+
+
 
 // Faz a impressão de um grafo em um arquivo;
-void imprimeArquivoGrafo(Grafo G, FILE *saida) {
+void imprime_ArquivoGrafo(Grafo G, FILE *saida) {
   int i;
   No *p;
 
-  fprintf(saida, "Numero de Vertices: %d\n", G->n);
-  fprintf(saida, "Numero de Arestas: %d\n", G->m);
+  fprintf(saida, "Numero de Vertices: %d\n", G->MaxNumeroVertices);
+  fprintf(saida, "Numero de Arestas: %d\n", G->QuantidadeArestas);
 
-  for (i = 0; i < G->n; i++) {
+  for (i = 0; i < G->MaxNumeroVertices; i++) {
     fprintf(saida, "Vertice %d:", i);
-    for (p = G->A[i]; p != NULL; p = p->proximo) {
-      fprintf(saida, " %d", p->valor);
+    for (p = G->ListaAdjacencia[i]; p != NULL; p = p->proximo) {
+      fprintf(saida, "(%d peso é:%d)", p->valor, p->peso);
     }
-    fprintf(saida, " -1\n");
+    fprintf(saida, "\n");
   }
 }
 
-// free em tudo do grafo no final do código;
-void liberaGrafo(Grafo G) {
+// Free em tudo do grafo no final do código;
+void free_liberaGrafo(Grafo G) {
   if (G == NULL)
     return;
 
-  for (int i = 0; i < G->n; i++) {
-    No *p = G->A[i];
+  for (int i = 0; i < G->MaxNumeroVertices; i++) {
+    No *p = G->ListaAdjacencia[i];
     while (p != NULL) {
       No *temp = p;
       p = p->proximo;
@@ -97,7 +114,7 @@ void liberaGrafo(Grafo G) {
     }
   }
 
-  free(G->A);
+  free(G->ListaAdjacencia);
   free(G);
 }
 
@@ -112,19 +129,20 @@ int main(void) {
     return 1;
   }
 
-  // for(int i = 0; i < 10; i++){
-  // int n = rand() % 51 + 25;
-  // printf("%d\n", n);
+  int NumeroMaxVertices = rand() % 51 + 25;
+  printf("Numero total de Vertices: %d\n", NumeroMaxVertices);
+  int QuantidadeMaxArestas = NumeroMaxVertices * (NumeroMaxVertices - 1) / 2; //== n.(n-1)/2;
+  printf("Numero total de Arestas: %d\n", QuantidadeMaxArestas);
 
-  int n = 13;
-  printf("%d\n", n);
-  int m = n * (n - 1) / 2;
-  printf("%d\n", m);
+  int PesoMaximo = 50;
+  //printf("Digite o numero maximo de pesos que pode ser utilizado em uma aresta: ");
+  //scanf(" %d", &PesoMaximo);
 
-  Grafo G = grafo_aleatorio(n, m);
-  imprimeArquivoGrafo(G, saida);
+  Grafo G = Criacao_grafo_aleatorio(NumeroMaxVertices, QuantidadeMaxArestas, PesoMaximo);
+  
+  imprime_ArquivoGrafo(G, saida);
 
-  liberaGrafo(G);
+  free_liberaGrafo(G);
 
   return 0;
 }
