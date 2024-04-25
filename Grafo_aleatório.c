@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <limits.h>
+#include <stdbool.h>
 
 typedef struct noh {
   int valor;
@@ -66,38 +67,123 @@ Grafo Criacao_grafo_aleatorio(int n, int m, int PesoMaximo) {
   }
   return G;
 }
+
 // Dijkstra: Inicializa os dois vetores auxiliares colocando infinito e NULL(-1);
-void INICIALIZA(Grafo G, int n,int s){
-  int *d = (int*) malloc(n*sizeof(int));
-  int *pi = (int*) malloc(n* sizeof(int));
-  for(int i = 0; i < n; i++){
-    d[i] = INT_MAX;
-    pi[i] = -1;
+void INICIALIZA(Grafo G, int *p, int *d, int s) {
+  for (int v = 0; v < G->MaxNumeroVertices; v++) {
+    d[v] = INT_MAX / 2;
+    p[v] = -1;
   }
   d[s] = 0;
 }
-// Dijkstra :;
-void RELAXA(int u, int n, int w){
 
+void RELAXA(Grafo G, int *d, int *p, int u, int v) {
+  No *ad = G->ListaAdjacencia[u];
+  while (ad && ad->valor != v) {
+    ad = ad->proximo;
+  }
+  if (ad) {
+    if (d[v] > d[u] + ad->peso) {
+      d[v] = d[u] + ad->peso;
+      p[v] = u;
+    }
+  }
 }
 
+bool ExisteAberto(Grafo G, bool *aberto) {
+  for (int i = 0; i < G->MaxNumeroVertices; i++) {
+    if (aberto[i]) {
+      return true;
+    }
+  }
+  return false;
+}
 
+int menorDistancia(Grafo G, bool *aberto, int *d) {
+  int minDistancia = INT_MAX;
+  int verticeMenorDistancia = -1;
+  for (int i = 0; i < G->MaxNumeroVertices; i++) {
+    if (aberto[i] && d[i] < minDistancia) {
+      minDistancia = d[i];
+      verticeMenorDistancia = i;
+    }
+  }
+  return verticeMenorDistancia;
+}
+
+void Dijkstra(Grafo G, int s) {
+  int *d = malloc(G->MaxNumeroVertices * sizeof(int));
+  int *p = malloc(G->MaxNumeroVertices * sizeof(int));
+  bool *aberto = malloc(G->MaxNumeroVertices * sizeof(bool));
+
+  INICIALIZA(G, p, d, s);
+
+  for (int i = 0; i < G->MaxNumeroVertices; i++) {
+    aberto[i] = true;
+  }
+
+  while (ExisteAberto(G, aberto)) {
+    int u = menorDistancia(G, aberto, d);
+    aberto[u] = false;
+    No *ad = G->ListaAdjacencia[u];
+    while (ad != NULL) {
+      RELAXA(G, d, p, u, ad->valor);
+      ad = ad->proximo;
+    }
+  }
+
+  printf("\nMenor caminho a partir do vértice %d:\n", s);
+  for (int i = 0; i < G->MaxNumeroVertices; i++) {
+    printf("Para o vértice %d: Distância mínima = %d, Vértice anterior = %d\n",i, d[i], p[i]);
+  }
+
+  free(d);
+  free(p);
+  free(aberto);
+}
 
 // Faz a impressão de um grafo em um arquivo;
 void imprime_ArquivoGrafo(Grafo G, FILE *saida) {
   int i;
   No *p;
+  int resposta = 0;
 
   fprintf(saida, "Numero de Vertices: %d\n", G->MaxNumeroVertices);
   fprintf(saida, "Numero de Arestas: %d\n", G->QuantidadeArestas);
 
-  for (i = 0; i < G->MaxNumeroVertices; i++) {
+
+while(resposta != 1 && resposta != 2){
+printf("Escolha a opção com peso ou sem peso para escrever no arquivo txt:");
+printf("\n1. Digite 1 para mostrar sem peso\n2. Digite 2 para mostrar com peso\n> ");
+scanf("%d", &resposta);
+}
+
+
+switch (resposta)
+{
+case 1:
+for (i = 0; i < G->MaxNumeroVertices; i++) {
     fprintf(saida, "Vertice %d:", i);
     for (p = G->ListaAdjacencia[i]; p != NULL; p = p->proximo) {
-      fprintf(saida, "(%d peso é:%d)", p->valor, p->peso);
+      fprintf(saida, " %d", p->valor);
     }
     fprintf(saida, "\n");
   }
+  break;
+case 2:
+for (i = 0; i < G->MaxNumeroVertices; i++) {
+    fprintf(saida, "Vertice %d:", i);
+  for (p = G->ListaAdjacencia[i]; p != NULL; p = p->proximo) {
+  fprintf(saida, "(%d peso é:%d)", p->valor, p->peso);
+  }
+    fprintf(saida, "\n");
+  }
+  break;
+
+default: printf("\nOpção inválida!\n");
+  break;
+}
+
 }
 
 // Free em tudo do grafo no final do código;
@@ -138,11 +224,10 @@ int main(void) {
   //printf("Digite o numero maximo de pesos que pode ser utilizado em uma aresta: ");
   //scanf(" %d", &PesoMaximo);
 
-  Grafo G = Criacao_grafo_aleatorio(NumeroMaxVertices, QuantidadeMaxArestas, PesoMaximo);
-  
+  Grafo G = Criacao_grafo_aleatorio(NumeroMaxVertices, QuantidadeMaxArestas,PesoMaximo);
   imprime_ArquivoGrafo(G, saida);
-
+  Dijkstra(G, 0);
   free_liberaGrafo(G);
-
+  fclose(saida);
   return 0;
 }
