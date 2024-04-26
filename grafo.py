@@ -1,7 +1,8 @@
+# bibliotecas utilizas para desenhar os grafos;
 import networkx as nx
 import matplotlib.pyplot as plt
 
-# Ler as informações do arquivo e criar um grafo
+# Ler as informações do arquivo para a ciração do grafo;
 def read_graph(filename):
     with open(filename, 'r') as file:
         num_vertices = int(file.readline().split()[-1])
@@ -14,10 +15,10 @@ def read_graph(filename):
                 graph.add_edge(vertex, neighbor)
         return graph
 
-# Carregar o grafo
+# Carregar o grafo para o arquivo;
 filename = 'grafo.txt'
 G = read_graph(filename)
 
-# Desenhar o grafo
+# Imprime o desenho do grafo;
 nx.draw(G, with_labels=True, node_color='lightblue', node_size=1000, font_size=12, font_color='black', font_weight='bold')
 plt.show()
