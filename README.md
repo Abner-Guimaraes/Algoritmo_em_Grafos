@@ -11,4 +11,4 @@ Para o nosso trabalho de Lista de Adjacência em linguagem C, estamos desenvolve
 5. Closeness: Cálculo da centralidade de vértice usando algoritmo de Dijkstra - [✔]
 6. Desenho do Grafo em Python - [✔]
 7. Apresentação elaborada utilizando LaTeX - [Pendente]
-8. Documentação do código - [Pendente]
+8. Documentação do código - [✔]
