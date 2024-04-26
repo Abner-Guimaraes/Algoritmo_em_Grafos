@@ -144,10 +144,16 @@ void Dijkstra(Grafo G, int s) {
     }
   }
 
-  printf("\nMenor caminho a partir do vértice %d:\n", s);
-  for(int i = 0; i < G->MaxNumeroVertices; i++) {
-    printf("Para o vértice %d: Distância mínima = %d, Vértice anterior = %d\n",i, d[i], p[i]);
-  }
+  printf("\n--------------------------------------------\n");
+    printf("Menor caminho a partir do vértice %d:\n", s);
+    printf("+---------------+-----------------+------------------+\n");
+    printf("| Vértice       | Distância mínima| Vértice anterior|\n");
+    printf("+---------------+-----------------+------------------+\n");
+    for(int i = 0; i < G->MaxNumeroVertices; i++) {
+        printf("| %13d | %15d | %16d |\n", i, d[i], p[i]);
+    }
+    printf("+---------------+-----------------+------------------+\n");
+    
   int teste = closeness(G,s,d);
   G->closeness[s] = closeness(G,s,d);
   

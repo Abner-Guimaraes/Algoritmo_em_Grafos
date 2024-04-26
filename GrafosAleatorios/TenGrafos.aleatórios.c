@@ -141,11 +141,6 @@ int main(void) {
     return 1;
   }
 
-  int NumeroMaxVertices = rand() % 51 + 25;
-  printf("Numero total de Vertices: %d\n", NumeroMaxVertices);
-  int QuantidadeMaxArestas = NumeroMaxVertices * (NumeroMaxVertices - 1) / 2; //== n.(n-1)/2;
-  printf("Numero total de Arestas: %d\n", QuantidadeMaxArestas);
-
   int PesoMaximo = 50;
 
 for(int i = 0; i < 10; i++){
@@ -157,7 +152,12 @@ for(int i = 0; i < 10; i++){
       printf("Erro ao abrir o arquivo.\n");
       return 1;
     }
-
+    
+	int NumeroMaxVertices = rand() % 51 + 25;
+		printf("Numero total de Vertices: %d\n", NumeroMaxVertices);
+	int QuantidadeMaxArestas = NumeroMaxVertices * (NumeroMaxVertices - 1) / 2; //== n.(n-1)/2;
+  		printf("Numero total de Arestas: %d\n", QuantidadeMaxArestas);
+  
     Grafo G = Criacao_grafo_aleatorio(NumeroMaxVertices, QuantidadeMaxArestas, PesoMaximo);
     imprime_ArquivoGrafo(G, saida);
     free_liberaGrafo(G);

@@ -9,6 +9,6 @@ Para o nosso trabalho de Lista de Adjacência em linguagem C, estamos desenvolve
 3. Representação do grafo em um arquivo - [✔]
 4. Implementação do algoritmo de Dijkstra para encontrar o caminho mínimo - [✔]
 5. Closeness: Cálculo da centralidade de vértice usando algoritmo de Dijkstra - [✔]
-6. Desenho do Grafo em Python - [Pendente]
+6. Desenho do Grafo em Python - [✔]
 7. Apresentação elaborada utilizando LaTeX - [Pendente]
 8. Documentação do código - [Pendente]

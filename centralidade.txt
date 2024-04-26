@@ -1,0 +1,27 @@
+Numero de Vertices: 25
+Numero de Arestas: 300
+Vertice 0: 28.000000
+Vertice 1: 20.000000
+Vertice 2: 10.000000
+Vertice 3: 24.000000
+Vertice 4: 13.000000
+Vertice 5: 16.000000
+Vertice 6: 14.000000
+Vertice 7: 23.000000
+Vertice 8: 22.000000
+Vertice 9: 18.000000
+Vertice 10: 17.000000
+Vertice 11: 15.000000
+Vertice 12: 16.000000
+Vertice 13: 35.000000
+Vertice 14: 16.000000
+Vertice 15: 21.000000
+Vertice 16: 27.000000
+Vertice 17: 24.000000
+Vertice 18: 11.000000
+Vertice 19: 24.000000
+Vertice 20: 19.000000
+Vertice 21: 19.000000
+Vertice 22: 13.000000
+Vertice 23: 16.000000
+Vertice 24: 14.000000
