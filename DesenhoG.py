@@ -1,11 +1,16 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 
-# Faz a leitura do arquivo grafo.txt;
-with open("grafo.txt", "r") as f:
-    lines = f.readlines()
+# Faz a leitura do arquivo com o grafo;
+arqGrafo = (input("Digite o nome do arquivo:\n> ") + ".txt")
+try:
+    with open(arqGrafo, "r") as f:
+        lines = f.readlines()
+except FileNotFoundError:
+    print(f"Erro: O arquivo '{arqGrafo}' não foi encontrado.")
+    exit()
 
-# Cria o grafo
+# Cria o grafo;
 G = nx.Graph()
 for line in lines:
     if line.startswith("Vertice"):
@@ -14,18 +19,22 @@ for line in lines:
         for neighbor in neighbors:
             G.add_edge(vertex, neighbor)
 
-# Faz a leitura do arquivo centralidade.txt;
-with open("centralidade.txt", "r") as f:
-    lines = f.readlines()
-    centrality = {}
-    for line in lines:
-        try:
-            vertex = int(line.split(":")[0].split(" ")[1])
-            value = float(line.split(":")[1].strip())
-            centrality[vertex] = value
-        except (ValueError, IndexError):
-            # Ignora linhas que não podem ser convertidas corretamente;
-            pass
+# Faz a leitura do arquivo de centralidade;
+arqCentralidade = (input("Digite o nome do arquivo de centralidade do grafo:\n> ") + ".txt")
+try:
+    with open(arqCentralidade, "r") as f:
+        lines = f.readlines()
+        centrality = {}
+        for line in lines:
+            try:
+                vertex = int(line.split(":")[0].split(" ")[1])
+                value = float(line.split(":")[1].strip())
+                centrality[vertex] = value
+            except (ValueError, IndexError):
+                pass
+except FileNotFoundError:
+    print(f"Erro: O arquivo '{arqCentralidade}' não foi encontrado.")
+    exit()
 
 # Calcula a média dos valores de centralidade;
 mean_centrality = sum(centrality.values()) / len(centrality)
@@ -52,11 +61,10 @@ for node in G.nodes():
         else:
             pos[node] = nx.shell_layout(G, nlist=[list(G.nodes())], scale=1.2)[node]
 
-# Ajuste o tamanho da figura para espaçar os vértices;
+# Ajuste o tamanho da figura para o formato 16:9;
 plt.figure(figsize=(16, 9))
 
-# Exibe o grafo com vértices menores;
-nx.draw(G, pos, with_labels=True, node_color=colors, edge_color='lightgray', node_size=700,font_weight="bold")
+nx.draw(G, pos, with_labels=True, node_color=colors, edge_color='lightgray', node_size=700, font_weight="bold")
 
-# Mostra o gráfico
+# Mostra o grafo;
 plt.show()
