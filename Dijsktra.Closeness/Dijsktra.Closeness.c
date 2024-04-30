@@ -4,6 +4,19 @@
 #include <limits.h>
 #include <stdbool.h>
 
+/*+-----------------------------------------------------------+
+ | UNIFAL – Universidade Federal de Alfenas.                   |
+ | BACHARELADO EM CIENCIA DA COMPUTACAO.                       |
+ | Trabalho: Algoritmos em Grafos                              |
+ | Disciplina: Algoritmos e Estrutura de Dados II – Pratica    |
+ | Professor: Iago Augusto Carvalho                            |
+ | Aluno(s): Abner Gomes Guimarães - Felipe Araújo Correia     |
+ | Diogo da Silva Moreira - Gustavo Marcelino Izidoro          |
+ | Marcelo Bernardino da Silva Junior - Barbara Lima Marques   |
+ | Data: 01/04/2023                                            |
+ +-------------------------------------------------------------+
+*/
+
 typedef struct noh {
   int valor;
   int peso;
